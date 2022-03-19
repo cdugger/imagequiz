@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
-import temp_storage from '../data_access_layer/temp_storage';
+import data_service from '../data_access_layer/data_service';
 
 const Register = () => {
     const [name, setName] = useState('');
@@ -24,7 +24,7 @@ const Register = () => {
 
     let onSubmitHandler = (e) => {
         e.preventDefault();
-        temp_storage.customers.push({name: name, email: email, password: password});
+        data_service.customers.push({name: name, email: email, password: password});
         navigate('/login');
     }
 

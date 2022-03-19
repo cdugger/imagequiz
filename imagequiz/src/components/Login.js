@@ -2,9 +2,9 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
-import temp_storage from '../data_access_layer/temp_storage';
+import data_service from '../data_access_layer/data_service';
 
-const Register = (props) => {
+const Login = (props) => {
     const [password, setPassword] = useState('');
     const [email, setEmail] = useState('');
     const navigate = useNavigate();
@@ -19,7 +19,7 @@ const Register = (props) => {
 
     let onSubmitHandler = (e) => {
         e.preventDefault();
-        let found = temp_storage.customers.find(c => (c.email === email) && (c.password === password));
+        let found = data_service.customers.find(c => (c.email === email) && (c.password === password));
         if(found) {
             props.isLoggedIn(email);
             navigate('/');
@@ -50,4 +50,4 @@ const Register = (props) => {
     );
 }
 
-export default Register;
+export default Login;

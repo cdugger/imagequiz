@@ -1,25 +1,33 @@
-import flowers from '../data';
+import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import CardGroup from 'react-bootstrap/CardGroup';
 import Card from 'react-bootstrap/Card';
+import data_service from '../data_access_layer/data_service';
+import { useNavigate } from 'react-router-dom';
 
 
 const Home = () => {
-    const flowerInfo = flowers.map((f) => {
-        return <Col>
-            <Card>
-                <Card.Img variant="top" src={f.picture} />
-                <Card.Body>
-                    <Card.Title>{f.name}</Card.Title>
-                </Card.Body>
-            </Card>
-        </Col>
-    })
+    const navigate = useNavigate();
+
+    let startQuiz = (flowerName) => {
+        navigate('/quiz/' + flowerName);
+    }
+
     return (
-        <Row xs={1} md={4} className="g-4">
-            {flowerInfo}
-        </Row>
+        <Container>
+            <Row xs={1} md={3} className="g-4 text-center">
+                {data_service.getFlowers().map((f, i) => (
+                    <Col>
+                        <Card className="h-100" onClick={() => startQuiz(f.name)}>
+                            <Card.Img variant="top" src={f.picture} />
+                            <Card.Body>
+                                <Card.Title>{f.name}</Card.Title>
+                            </Card.Body>
+                        </Card>
+                    </Col>
+                ))}
+            </Row>
+        </Container>
     );
 }
 
