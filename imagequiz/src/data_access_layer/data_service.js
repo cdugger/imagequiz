@@ -8,6 +8,9 @@ let data_service= {
     getQuiz: (name) => {
         let quiz = data.find(x => x.name.toLowerCase() === name.toLowerCase());
         return quiz;
+    },
+    addCustomer: (name, email, password) => {
+
     }
 }
 

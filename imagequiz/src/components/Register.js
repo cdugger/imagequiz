@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
-import data_service from '../data_access_layer/data_service';
+import apiAccess from '../data_access_layer/data_service';
 
 const Register = () => {
     const [name, setName] = useState('');
@@ -24,7 +24,7 @@ const Register = () => {
 
     let onSubmitHandler = (e) => {
         e.preventDefault();
-        data_service.customers.push({name: name, email: email, password: password});
+        apiAccess.addCustomer(name, email, password);
         navigate('/login');
     }
 
