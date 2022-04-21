@@ -1,15 +1,13 @@
-import { useLocation, useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import data_service from "../data_access_layer/data_service";
 import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
 import Card from 'react-bootstrap/Card';
 import Spinner from 'react-bootstrap/Spinner';
 import ListGroup from 'react-bootstrap/ListGroup';
 import Button from 'react-bootstrap/Button';
+import apiAccess from '../communication/APIAccess';
 
-const Quiz = () => {
+const Quiz = (props) => {
     const navigate = useNavigate();
     const [currentQuestionNumber, setCurrentQuestionNumber] = useState(0);
     const [score, setScore] = useState(0);
@@ -20,14 +18,35 @@ const Quiz = () => {
 
     useEffect(() => {
         if (!quiz) {
-            let x = data_service.getQuiz(id);
-            setQuiz(x);
+            apiAccess.getQuiz(id)
+                .then(x => {
+                    setQuiz(x);
+                })
+                .catch(e => {
+                    alert('Something went wrong');
+                    console.log(e);
+                });
         }
-    });
+    }, [quiz, id]);
 
     let nextQuizQuestion = () => {
         if (currentQuestionNumber === quiz.questions.length - 1) {
             setGameOver(true);
+            // submit the score if user is logged in
+            if (props.customer) {
+                apiAccess.addScore(props.customer, id, score)
+                    .then(x => {
+                        if (x.done) {
+                            console.log('Successfully submitted score');
+                        } else {
+                            console.log('Score not submitted');
+                            console.log(x.message);
+                        }
+                    }).catch(e => {
+                        console.log(e);
+                        console.log('Something went wrong');
+                    })
+            }
         } else {
             setCurrentQuestionNumber(currentQuestionNumber + 1);
             setDisabled(false);
@@ -87,8 +106,8 @@ const Quiz = () => {
                         </Card.Text>
                     </Card.Body>
                     <ListGroup>
-                        {quiz.questions[currentQuestionNumber].choices.map(c => (
-                            <ListGroup.Item onClick={(e) => checkAnswer(c, e)}>{c}</ListGroup.Item>
+                        {quiz.questions[currentQuestionNumber].choices.map((c, i) => (
+                            <ListGroup.Item key={i} onClick={(e) => checkAnswer(c, e)}>{c}</ListGroup.Item>
                         ))}
                     </ListGroup>
                 </Card>
