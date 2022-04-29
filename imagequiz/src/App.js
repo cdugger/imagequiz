@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { HashRouter, Routes, Route } from 'react-router-dom';
+import { HashRouter, Routes, Route, Navigate, useParams } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Menu from './components/Menu';
 import Home from './components/Home';
@@ -11,10 +11,16 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
 function App() {
-  const [customer, setCustomer] = useState(undefined);
+  const [customer, setCustomer] = useState(localStorage.getItem('customer'));
 
   let loggedInHandler = (email) => {
+    localStorage.setItem('customer', email);
     setCustomer(email);
+  }
+
+  const customerLoggedOutHandler = () => {
+    localStorage.removeItem('customer');
+    setCustomer(undefined);
   }
 
   return (
@@ -22,16 +28,20 @@ function App() {
       <Container fluid>
         <Row>
           <Col>
-            <Menu customer={customer} />
+            <Menu customer={customer} customerLoggedOut={customerLoggedOutHandler} />
           </Col>
         </Row>
         <Row className="justify-content-md-center">
           <Col md="auto">
             <Routes>
               <Route exact path='/' element={<Home />} />
-              <Route exact path='/login' element={<Login isLoggedIn={loggedInHandler} />} />
+              <Route path='/login/:from' element={<Login isLoggedIn={loggedInHandler} />} />
+              <Route path='/login' element={<Login isLoggedIn={loggedInHandler} />} />
               <Route exact path='/register' element={<Register />} />
-              <Route exact path='/quiz/:id' element={<Quiz customer={customer} />} />
+              <Route exact path='/quiz/:id' element={
+                <ProtectedRoute customer={customer}><Quiz /></ProtectedRoute>
+              } />
+
             </Routes>
           </Col>
         </Row>
@@ -39,5 +49,16 @@ function App() {
     </HashRouter>
   );
 }
+
+const ProtectedRoute = ({ customer, children }) => {
+  const { id } = useParams();
+  if (customer) {
+    return children;
+  } else {
+    return <Navigate to={`/login/${id}`} />
+  }
+}
+
+
 
 export default App;

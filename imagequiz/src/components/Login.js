@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import apiAccess from '../communication/APIAccess';
@@ -8,6 +8,7 @@ const Login = (props) => {
     const [password, setPassword] = useState('');
     const [email, setEmail] = useState('');
     const navigate = useNavigate();
+    const { from } = useParams();
 
     let onPasswordChange = (e) => {
         setPassword(e.target.value);
@@ -23,7 +24,12 @@ const Login = (props) => {
         .then(x => {
             if(x.done) {
                 props.isLoggedIn(email);
-                navigate('/');
+                if(from) {
+                    navigate('/quiz/' + from);
+                } else {
+                    navigate('/');
+                }
+                
             } else {
                 alert('Invalid credentials');
             }
