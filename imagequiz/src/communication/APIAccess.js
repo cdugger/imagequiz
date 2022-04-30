@@ -1,4 +1,4 @@
-const backendAddress = 'https://cdugger-imagequiz-backend.herokuapp.com';
+const backendAddress = 'https://cdugger-imagequiz-api.herokuapp.com';
 
 let apiAccess = {
     addCustomer: (name, email, password) => {
