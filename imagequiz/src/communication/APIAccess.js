@@ -2,7 +2,6 @@
 import config from '../config';
 const backendAddress = config.backendAddress;
 
-
 let apiAccess = {
     addCustomer: (name, email, password) => {
         return fetch(`${backendAddress}/register`, {
