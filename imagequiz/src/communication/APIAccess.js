@@ -1,4 +1,7 @@
-const backendAddress = 'https://cdugger-imagequiz-backend.herokuapp.com';
+// const backendAddress = 'https://cdugger-imagequiz-backend.herokuapp.com';
+import config from '../config';
+const backendAddress = config.backendAddress;
+
 
 let apiAccess = {
     addCustomer: (name, email, password) => {
@@ -88,6 +91,22 @@ let apiAccess = {
                 console.log(x);
                 return x;
             })
+    },
+
+    isLoggedIn: () => {
+        return fetch(`${backendAddress}/isloggedin`, {
+            method: 'Get',
+            credentials: "include",
+            headers: {
+                'Content-Type': 'application/json',
+                "Access-Control-Allow-Credentials": true
+            }
+        })
+            .then(x => x.json())
+            .then(x => {
+                console.log(x);
+                return x.result;
+            });
     }
 
 }

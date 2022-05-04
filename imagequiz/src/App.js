@@ -4,6 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Menu from './components/Menu';
 import Home from './components/Home';
 import Login from './components/Login';
+import FederatedLogin from './components/FederatedLogin';
 import Register from './components/Register';
 import Quiz from './components/Quiz';
 import Container from 'react-bootstrap/Container';
@@ -37,6 +38,7 @@ function App() {
               <Route exact path='/' element={<Home />} />
               <Route path='/login/:from' element={<Login isLoggedIn={loggedInHandler} />} />
               <Route path='/login' element={<Login isLoggedIn={loggedInHandler} />} />
+              <Route path='/google/:username/:name' element={<FederatedLogin provider="google" customerLoggedIn={loggedInHandler} />}/>
               <Route exact path='/register' element={<Register />} />
               <Route exact path='/quiz/:id' element={
                 <ProtectedRoute customer={customer}><Quiz /></ProtectedRoute>
